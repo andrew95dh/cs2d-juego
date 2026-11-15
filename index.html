@@ -3,74 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS-2D: Mundo Abierto Táctico</title>
+    <title>Call of Duty: Web Ops 3D</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Motor Gráfico 3D Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <!-- Menú Inicial -->
+    <!-- Menú de Selección de Armamento -->
     <div id="loadout-screen">
-        <h1>CS-2D: ZONA DE GUERRA (MUNDO ABIERTO)</h1>
-        <p>Explora el mapa gigante, elimina patrullas, gana dinero ($) y rescata rehenes hacia la Base Aliada</p>
+        <h1>CALL OF DUTY: OPERACIONES DE RESCATE 3D</h1>
+        <p>Selecciona tu clase para desplegar en el campo de batalla</p>
         <div class="cards">
-            <div class="card" onclick="selectLoadout('m4a1')">
-                <h2>M4A1-S (Asalto)</h2>
-                <p>Versátil para combate urbano</p>
+            <div class="card" onclick="startGame('m4a1')">
+                <h2>ASALTO: M4A1</h2>
+                <p>Rifle táctico automático con mira holográfica</p>
                 <ul>
-                    <li>Daño: 28 | Cargador: 30</li>
-                    <li>Capital inicial: $500</li>
+                    <li>Daño: 34 | Cargador: 30</li>
+                    <li>Cadencia: Alta</li>
                 </ul>
             </div>
-            <div class="card" onclick="selectLoadout('nova')">
-                <h2>Nova (Escopeta)</h2>
-                <p>Control de interiores y emboscadas</p>
+            <div class="card" onclick="startGame('nova')">
+                <h2>BREACHER: ESCOPETA</h2>
+                <p>8 perdigones de alto impacto cercano</p>
                 <ul>
-                    <li>Daño: 18 x 6 perdigones</li>
-                    <li>Capital inicial: $600</li>
+                    <li>Daño: 22 x 8 | Cargador: 8</li>
+                    <li>Blindaje extra (+25 HP)</li>
                 </ul>
             </div>
-            <div class="card" onclick="selectLoadout('awp')">
-                <h2>AWP (Francotirador)</h2>
-                <p>Dominio a larga distancia</p>
+            <div class="card" onclick="startGame('awp')">
+                <h2>FRANCOTIRADOR: AWP</h2>
+                <p>Mira telescópica 4x de largo alcance</p>
                 <ul>
-                    <li>Daño: 140 | Cargador: 5</li>
-                    <li>Capital inicial: $400</li>
+                    <li>Daño: 150 (1 tiro = 1 baja)</li>
+                    <li>Cargador: 5 balas</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Tienda Táctica en la Base (Tecla B) -->
-    <div id="shop-modal" style="display: none;">
-        <h2>🛒 ARMERÍA DE LA BASE ALIADA</h2>
-        <p>Dinero disponible: <span id="shop-money">$0</span> | Presiona <b>B</b> o <b>ESC</b> para cerrar</p>
-        <div class="shop-grid">
-            <button onclick="buyItem('medkit')">❤️ Botiquín (+50 HP) - <b>$200</b></button>
-            <button onclick="buyItem('ammo')">🔸 Caja de Munición Full - <b>$150</b></button>
-            <button onclick="buyItem('grenade')">💣 Granada HE (+2) - <b>$250</b></button>
-            <button onclick="buyItem('ak47')">🔫 Comprar AK-47 - <b>$600</b></button>
-            <button onclick="buyItem('minigun')">🔥 Comprar Minigun - <b>$1400</b></button>
-            <button onclick="buyItem('rpg')">🚀 Comprar Lanzacohetes - <b>$1800</b></button>
-        </div>
-    </div>
+    <!-- Mira telescópica (Zoom clic derecho) -->
+    <div id="sniper-scope"></div>
 
-    <!-- HUD Táctico -->
+    <!-- Mira central (Crosshair) -->
+    <div id="crosshair">+</div>
+
+    <!-- Indicador de impacto (Hitmarker estilo CoD) -->
+    <div id="hitmarker">✕</div>
+
+    <!-- Efecto de daño en pantalla -->
+    <div id="damage-overlay"></div>
+
+    <!-- HUD Estilo Call of Duty -->
     <div id="hud">
-        <div class="stat money">💵 $<span id="money">500</span></div>
-        <div class="stat">❤️ HP: <span id="hp">100</span></div>
-        <div class="stat">🔫 <span id="weapon-name">-</span></div>
-        <div class="stat">🔸 <span id="ammo">0</span> / <span id="reserve">0</span></div>
-        <div class="stat">💣 <span id="grenades">2</span></div>
-        <div class="stat">🏃 Rescatados: <span id="rescued">0</span></div>
-        <div class="stat">☠️ Bajas: <span id="kills">0</span></div>
-        <button id="shop-btn" onclick="toggleShop()">🛒 Tienda [B]</button>
-        <button id="mute-btn" onclick="toggleMute()">🔊 Audio</button>
+        <div class="hud-top">
+            <div class="mission-box">
+                <span id="mission-text">OBJETIVO: Rescata a los rehenes (0/4) y llévalos a la Luz Verde</span>
+            </div>
+            <div class="stats-top">
+                <span>☠️ Bajas: <b id="kills">0</b></span>
+                <span>🏃 Rescatados: <b id="rescued">0</b> / 4</span>
+                <span>💵 $<b id="money">500</b></span>
+            </div>
+        </div>
+
+        <div class="hud-bottom">
+            <div class="health-box">
+                ❤️ SALUD: <span id="hp">100</span>
+            </div>
+            <div class="weapon-box">
+                <div id="weapon-name">M4A1 CARBINE</div>
+                <div class="ammo-count"><span id="ammo">30</span> / <span id="reserve">120</span> | 💣 <span id="grenades">2</span></div>
+            </div>
+        </div>
     </div>
 
-    <canvas id="gameCanvas" width="1000" height="620"></canvas>
-
-    <div id="controls">
-        <b>WASD:</b> Explorar mapa | <b>Mouse:</b> Apuntar y Disparar | <b>Click Der / G:</b> Granada | <b>R:</b> Recargar | <b>E:</b> Recoger arma | <b>B:</b> Abrir Tienda en Base
+    <!-- Pantalla de Pausa / Instrucciones -->
+    <div id="pause-overlay" style="display: none;">
+        <h2>JUEGO PAUSADO</h2>
+        <p>Haz clic en la pantalla para volver al combate</p>
+        <p class="keys-help"><b>WASD:</b> Moverse | <b>SHIFT:</b> Correr | <b>ESPACIO:</b> Saltar | <b>CLICK IZQ:</b> Disparar | <b>CLICK DER:</b> Apuntar | <b>R:</b> Recargar | <b>G:</b> Granada | <b>E:</b> Recoger munición</p>
     </div>
+
+    <!-- Pantalla Final -->
+    <div id="end-screen" style="display: none;">
+        <h1 id="end-title">MISIÓN CUMPLIDA</h1>
+        <p id="end-stats"></p>
+        <button onclick="location.reload()">VOLVER A JUGAR</button>
+    </div>
+
     <script src="game.js"></script>
 </body>
 </html>
