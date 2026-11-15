@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS-2D: Operaciones Tácticas</title>
+    <title>CS-2D: Operaciones Especiales</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Menú de Selección de Arma Principal -->
     <div id="loadout-screen">
-        <h1>ELIGE TU EQUIPAMIENTO PRINCIPAL</h1>
-        <p>Haz clic para desplegar con sonido táctico activado (Incluye Pistola USP + 2 Granadas HE)</p>
+        <h1>OPERACIONES ESPECIALES: RESCATE</h1>
+        <p>Selecciona tu armamento táctico para iniciar la campaña (3 Niveles)</p>
         <div class="cards">
             <div class="card" onclick="selectLoadout('m4a1')">
                 <h2>M4A1-S (Rifle)</h2>
@@ -32,7 +32,7 @@
                 <h2>AWP (Francotirador)</h2>
                 <p>Calibre pesado .338 Lapua</p>
                 <ul>
-                    <li>Daño: 130 | Cargador: 5</li>
+                    <li>Daño: 135 | Cargador: 5</li>
                     <li>Impacto letal instantáneo</li>
                 </ul>
             </div>
@@ -41,16 +41,17 @@
 
     <!-- HUD Táctico -->
     <div id="hud">
+        <div class="stat level-badge">🗺️ Nivel: <span id="level-num">1 / 3</span></div>
         <div class="stat">❤️ HP: <span id="hp">100</span></div>
         <div class="stat">🔫 Arma: <span id="weapon-name">-</span></div>
         <div class="stat">🔸 Balas: <span id="ammo">0</span> / <span id="reserve">0</span></div>
         <div class="stat">💣 Granadas: <span id="grenades">2</span></div>
-        <div class="stat">🏃 Rehenes: <span id="rescued">0</span> / 3</div>
+        <div class="stat">🏃 Rehenes: <span id="rescued">0</span> / <span id="total-hostages">3</span></div>
         <div class="stat">☠️ Enemigos: <span id="enemies">0</span></div>
         <button id="mute-btn" onclick="toggleMute()">🔊 Audio ON</button>
     </div>
 
-    <canvas id="gameCanvas" width="950" height="620"></canvas>
+    <canvas id="gameCanvas" width="960" height="620"></canvas>
 
     <div id="controls">
         <b>1:</b> Arma Primaria | <b>2:</b> Pistola | <b>Click Izq:</b> Disparar | <b>Click Der / G:</b> Granada HE | <b>R:</b> Recargar | <b>E:</b> Recoger arma
