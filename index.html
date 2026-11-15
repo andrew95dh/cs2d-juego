@@ -3,38 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Call of Duty: Web Ops 3D</title>
+    <title>Call of Duty: Web Ops 3D - Ultra</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Motor Gráfico 3D Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <!-- Menú de Selección de Armamento -->
     <div id="loadout-screen">
-        <h1>CALL OF DUTY: OPERACIONES DE RESCATE 3D</h1>
-        <p>Selecciona tu clase para desplegar en el campo de batalla</p>
+        <h1>CALL OF DUTY: BLACK OPS WEB 3D</h1>
+        <p>Selecciona tu clase táctica para desplegar con Radar UAV y gráficos PBR</p>
         <div class="cards">
             <div class="card" onclick="startGame('m4a1')">
-                <h2>ASALTO: M4A1</h2>
-                <p>Rifle táctico automático con mira holográfica</p>
+                <h2>ASALTO: M4A1 SOPMOD</h2>
+                <p>Silenciador táctico + Mira Holográfica</p>
                 <ul>
-                    <li>Daño: 34 | Cargador: 30</li>
+                    <li>Daño: 35 | Cargador: 30</li>
                     <li>Cadencia: Alta</li>
                 </ul>
             </div>
             <div class="card" onclick="startGame('nova')">
-                <h2>BREACHER: ESCOPETA</h2>
+                <h2>BREACHER: ESCOPETA M870</h2>
                 <p>8 perdigones de alto impacto cercano</p>
                 <ul>
-                    <li>Daño: 22 x 8 | Cargador: 8</li>
-                    <li>Blindaje extra (+25 HP)</li>
+                    <li>Daño: 24 x 8 | Cargador: 8</li>
+                    <li>Blindaje pesado (+30 HP)</li>
                 </ul>
             </div>
             <div class="card" onclick="startGame('awp')">
-                <h2>FRANCOTIRADOR: AWP</h2>
-                <p>Mira telescópica 4x de largo alcance</p>
+                <h2>FRANCOTIRADOR: L115A3</h2>
+                <p>Mira telescópica 4x de precisión letal</p>
                 <ul>
-                    <li>Daño: 150 (1 tiro = 1 baja)</li>
+                    <li>Daño: 160 (1 tiro = 1 baja)</li>
                     <li>Cargador: 5 balas</li>
                 </ul>
             </div>
@@ -53,12 +52,20 @@
     <!-- Efecto de daño en pantalla -->
     <div id="damage-overlay"></div>
 
-    <!-- HUD Estilo Call of Duty -->
+    <!-- HUD Estilo Call of Duty con Minimapa UAV -->
     <div id="hud">
         <div class="hud-top">
-            <div class="mission-box">
-                <span id="mission-text">OBJETIVO: Rescata a los rehenes (0/4) y llévalos a la Luz Verde</span>
+            <div class="top-left">
+                <!-- Radar Circular UAV -->
+                <div class="radar-wrapper">
+                    <canvas id="minimap" width="160" height="160"></canvas>
+                    <div class="radar-label">UAV ONLINE</div>
+                </div>
+                <div class="mission-box">
+                    <span id="mission-text">OBJETIVO: Rescata a los rehenes (0/4) hacia la Luz Verde</span>
+                </div>
             </div>
+
             <div class="stats-top">
                 <span>☠️ Bajas: <b id="kills">0</b></span>
                 <span>🏃 Rescatados: <b id="rescued">0</b> / 4</span>
@@ -71,17 +78,17 @@
                 ❤️ SALUD: <span id="hp">100</span>
             </div>
             <div class="weapon-box">
-                <div id="weapon-name">M4A1 CARBINE</div>
+                <div id="weapon-name">M4A1 SOPMOD</div>
                 <div class="ammo-count"><span id="ammo">30</span> / <span id="reserve">120</span> | 💣 <span id="grenades">2</span></div>
             </div>
         </div>
     </div>
 
-    <!-- Pantalla de Pausa / Instrucciones -->
+    <!-- Pantalla de Pausa -->
     <div id="pause-overlay" style="display: none;">
         <h2>JUEGO PAUSADO</h2>
         <p>Haz clic en la pantalla para volver al combate</p>
-        <p class="keys-help"><b>WASD:</b> Moverse | <b>SHIFT:</b> Correr | <b>ESPACIO:</b> Saltar | <b>CLICK IZQ:</b> Disparar | <b>CLICK DER:</b> Apuntar | <b>R:</b> Recargar | <b>G:</b> Granada | <b>E:</b> Recoger munición</p>
+        <p class="keys-help"><b>WASD:</b> Moverse | <b>SHIFT:</b> Correr | <b>ESPACIO:</b> Saltar | <b>CLICK IZQ:</b> Disparar | <b>CLICK DER:</b> Apuntar | <b>R:</b> Recargar | <b>G:</b> Granada</p>
     </div>
 
     <!-- Pantalla Final -->
